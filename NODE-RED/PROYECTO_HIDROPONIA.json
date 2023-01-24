@@ -1,0 +1,142 @@
+[
+    {
+        "id": "1a5a60b633212750",
+        "type": "ui_gauge",
+        "z": "3d5ca112.f42856",
+        "name": "LUZ",
+        "group": "a7841362.ae40c",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "gtype": "wave",
+        "title": "LUMINOSIDAD",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1710,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "c0b0ad39d48fa8a6",
+        "type": "inject",
+        "z": "3d5ca112.f42856",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1270,
+        "y": 680,
+        "wires": [
+            [
+                "c260e6cfa2f0372a"
+            ]
+        ]
+    },
+    {
+        "id": "c260e6cfa2f0372a",
+        "type": "http request",
+        "z": "3d5ca112.f42856",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "192.168.159.245/ligthValue",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1450,
+        "y": 680,
+        "wires": [
+            [
+                "1a5a60b633212750",
+                "998a9f1b135233d9"
+            ]
+        ]
+    },
+    {
+        "id": "998a9f1b135233d9",
+        "type": "function",
+        "z": "3d5ca112.f42856",
+        "name": "function 2",
+        "func": "var tzoffset = (new Date()).getTimezoneOffset() * 6000;\n\nvar fechahora = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);\nvar ID = 3\n\nvar SENSOR_VALUE = msg.payload\n\nmsg.topic = \"INSERT INTO SENSOR_INFO(FECHA,SENSORES_idSENSORES,DATO) VALUES ('\" + fechahora + \"','\" + ID + \"','\" + SENSOR_VALUE + \"')\";\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1540,
+        "y": 760,
+        "wires": [
+            [
+                "90d7f1ba31050d81"
+            ]
+        ]
+    },
+    {
+        "id": "90d7f1ba31050d81",
+        "type": "mysql",
+        "z": "3d5ca112.f42856",
+        "mydb": "f55f5c1752f85641",
+        "name": "",
+        "x": 1720,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a7841362.ae40c",
+        "type": "ui_group",
+        "name": "My studio",
+        "tab": "2ff36ff5.bdc628",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "f55f5c1752f85641",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "containers-us-west-197.railway.app",
+        "port": "6283",
+        "db": "railway",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "2ff36ff5.bdc628",
+        "type": "ui_tab",
+        "name": "SISTEMA HIDROPONICO",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
